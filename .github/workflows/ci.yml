@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  TOKA_CORE_REVISION: 7e4bd0c9a89bfe741ef687be49600f915d3045b9
+  TOKA_CORE_REVISION: 8216daa0c9e8463e35ba05219310d520474314e6
   EMSCRIPTEN_VERSION: 6.0.6
 
 jobs:
@@ -63,7 +63,7 @@ jobs:
         run: .toka-core/tools/scripts/build_browser_compiler.sh playground
 
       - name: Test browser checker
-        run: node test/browser_checker.cjs
+        run: node .toka-core/tests/wasm/browser_compiler_self_test.js playground/tokacheck.js
 
       - name: Assemble playground
         run: |
@@ -92,7 +92,7 @@ jobs:
           test -s dist/LICENSE.txt
           test -s dist/THIRD_PARTY_NOTICES.txt
           test -s dist/THIRD_PARTY_LICENSES.json
-          if find dist -type f | grep -Eq 'repro_|server\.js|browser_checker\.cjs'; then
+          if find dist -type f | grep -Eq 'repro_|server\.js|browser_compiler_self_test\.js'; then
             echo 'site artifact contains a core qualification or development file' >&2
             exit 1
           fi
