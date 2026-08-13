@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  TOKA_CORE_REVISION: 30112d994e8db5e18c524e300cea0ee5f742b24e
+  TOKA_CORE_REVISION: 7e4bd0c9a89bfe741ef687be49600f915d3045b9
   EMSCRIPTEN_VERSION: 6.0.6
 
 jobs:
@@ -45,7 +45,6 @@ jobs:
           key: browser-checker-${{ runner.os }}-${{ env.TOKA_CORE_REVISION }}-emscripten-${{ env.EMSCRIPTEN_VERSION }}
 
       - name: Checkout locked Toka core
-        if: steps.checker-cache.outputs.cache-hit != 'true'
         uses: actions/checkout@v4
         with:
           repository: tokalang/toka
@@ -76,6 +75,7 @@ jobs:
           cp playground/toka_mode.js public/playground/
           cp playground/tokacheck.js public/playground/
           cp playground/tokacheck.wasm public/playground/
+          cp .toka-core/tools/install.sh public/install.sh
 
       - name: Build website
         env:
