@@ -289,8 +289,8 @@ async function runCode() {
 
         const wasmBytes = await compileRes.arrayBuffer();
 
-        // Dynamically import WASI shim
-        const { WASI, Fd } = await import("https://cdn.jsdelivr.net/npm/@bjorn3/browser_wasi_shim@0.2.17/+esm");
+        // Dynamically import the locally packaged WASI shim.
+        const { WASI, Fd } = await import("./vendor/browser_wasi_shim.js");
 
         let terminalHtml = "";
         const appendOutput = (text, className = "") => {

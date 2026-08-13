@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:3000; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'">
     <title>Toka Validator Playground</title>
-    <!-- CodeMirror 6 is complex to bundle without npm, we'll use CodeMirror 5 for CDN simplicity but theme it to look modern -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/material-darker.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/lint/lint.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- CodeMirror is packaged with this site; no third-party runtime code is fetched. -->
+    <link rel="stylesheet" href="vendor/codemirror.css">
+    <link rel="stylesheet" href="vendor/material-darker.css">
+    <link rel="stylesheet" href="vendor/lint.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -37,7 +37,7 @@
             <div class="output-pane">
                 <div class="output-header">
                     <h3>Diagnostics</h3>
-                    <div class="status-group" style="display: flex; gap: 8px;">
+                    <div class="status-group">
                         <div id="status-indicator" class="status-indicator">Loading Compiler...</div>
                         <div id="runner-indicator" class="status-indicator status-disconnected">Runner: Offline</div>
                     </div>
@@ -50,9 +50,9 @@
     </div>
 
     <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/mode/simple.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/lint/lint.min.js"></script>
+    <script src="vendor/codemirror.js"></script>
+    <script src="vendor/simple.js"></script>
+    <script src="vendor/lint.js"></script>
     <!-- Load Toka Mode -->
     <script src="toka_mode.js"></script>
     <!-- Load WebAssembly API -->

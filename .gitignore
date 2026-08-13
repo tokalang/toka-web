@@ -7,6 +7,7 @@ public/install.sh
 public/LICENSE.txt
 public/THIRD_PARTY_NOTICES.txt
 public/THIRD_PARTY_LICENSES.json
+public/licenses/
 playground/tokacheck.js
 playground/tokacheck.wasm
 *.log
