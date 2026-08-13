@@ -5,8 +5,9 @@ Official website and browser playground for the
 
 ## Repository boundary
 
-This repository owns the public website, browser playground UI, and website
-deployment. It does not define language semantics, compiler behavior, or
+This repository owns the public website and browser playground UI. It builds
+and qualifies the deployable site artifact; production cutover is handled
+separately. It does not define language semantics, compiler behavior, or
 standard-library contracts; those remain authoritative in `tokalang/toka`.
 
 The browser checker is built from the exact Toka revision and Emscripten
