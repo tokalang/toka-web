@@ -6,9 +6,10 @@ Official website and browser playground for the
 ## Repository boundary
 
 This repository owns the public website and browser playground UI. It builds
-and qualifies the deployable site artifact; production cutover is handled
-separately. It does not define language semantics, compiler behavior, or
-standard-library contracts; those remain authoritative in `tokalang/toka`.
+and qualifies the deployable site artifact, then deploys the qualified artifact
+from `main` to [tokalang.dev](https://tokalang.dev) through GitHub Pages. It does
+not define language semantics, compiler behavior, or standard-library
+contracts; those remain authoritative in `tokalang/toka`.
 
 The browser checker is built from the exact Toka revision and Emscripten
 version recorded in [compiler.lock.json](compiler.lock.json). This source-build
@@ -28,6 +29,12 @@ The full browser-checker qualification also requires Emscripten 6.0.6. CI
 checks out the locked Toka revision, builds `tokacheck.js` and
 `tokacheck.wasm`, runs the playground self-test, and then assembles the static
 site. Generated compiler and site artifacts are not committed.
+
+## Deployment
+
+Only a successful `main` build can deploy to the `github-pages` environment.
+The custom domain is configured in the repository's GitHub Pages settings;
+Cloudflare remains the DNS and edge provider.
 
 ## Migration provenance
 
