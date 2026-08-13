@@ -1,0 +1,8 @@
+{
+  "schema": "toka.browser-compiler-lock",
+  "version": 1,
+  "repository": "tokalang/toka",
+  "revision": "30112d994e8db5e18c524e300cea0ee5f742b24e",
+  "emscripten": "6.0.6",
+  "sourceBuild": true
+}

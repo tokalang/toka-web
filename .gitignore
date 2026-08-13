@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.toka-core/
+public/playground/
+public/LICENSE.txt
+public/THIRD_PARTY_NOTICES.txt
+public/THIRD_PARTY_LICENSES.json
+playground/tokacheck.js
+playground/tokacheck.wasm
+*.log
+.env
+.env.production
+.DS_Store

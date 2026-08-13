@@ -1,0 +1,106 @@
+name: Web CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: web-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TOKA_CORE_REVISION: 30112d994e8db5e18c524e300cea0ee5f742b24e
+  EMSCRIPTEN_VERSION: 6.0.6
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout website
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Validate compiler lock
+        run: |
+          node -e 'const lock = require("./compiler.lock.json"); if (lock.revision !== process.env.TOKA_CORE_REVISION || !/^[0-9a-f]{40}$/.test(lock.revision) || lock.emscripten !== process.env.EMSCRIPTEN_VERSION || lock.repository !== "tokalang/toka" || lock.sourceBuild !== true) process.exit(1)'
+
+      - name: Restore browser checker
+        id: checker-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            playground/tokacheck.js
+            playground/tokacheck.wasm
+          key: browser-checker-${{ runner.os }}-${{ env.TOKA_CORE_REVISION }}-emscripten-${{ env.EMSCRIPTEN_VERSION }}
+
+      - name: Checkout locked Toka core
+        if: steps.checker-cache.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: tokalang/toka
+          ref: ${{ env.TOKA_CORE_REVISION }}
+          path: .toka-core
+          persist-credentials: false
+
+      - name: Setup Emscripten
+        if: steps.checker-cache.outputs.cache-hit != 'true'
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: ${{ env.EMSCRIPTEN_VERSION }}
+
+      - name: Build browser checker
+        if: steps.checker-cache.outputs.cache-hit != 'true'
+        run: .toka-core/tools/scripts/build_browser_compiler.sh playground
+
+      - name: Test browser checker
+        run: node test/browser_checker.cjs
+
+      - name: Assemble playground
+        run: |
+          rm -rf public/playground
+          mkdir -p public/playground
+          cp playground/app.js public/playground/
+          cp playground/index.html public/playground/
+          cp playground/style.css public/playground/
+          cp playground/toka_mode.js public/playground/
+          cp playground/tokacheck.js public/playground/
+          cp playground/tokacheck.wasm public/playground/
+
+      - name: Build website
+        env:
+          ASTRO_TELEMETRY_DISABLED: '1'
+        run: |
+          npm ci
+          npm run build
+
+      - name: Verify public artifact boundary
+        run: |
+          test -s dist/playground/tokacheck.js
+          test -s dist/playground/tokacheck.wasm
+          test -s dist/playground/index.html
+          test -s dist/LICENSE.txt
+          test -s dist/THIRD_PARTY_NOTICES.txt
+          test -s dist/THIRD_PARTY_LICENSES.json
+          if find dist -type f | grep -Eq 'repro_|server\.js|browser_checker\.cjs'; then
+            echo 'site artifact contains a core qualification or development file' >&2
+            exit 1
+          fi
+
+      - name: Upload qualified site
+        uses: actions/upload-artifact@v4
+        with:
+          name: toka-web-${{ github.sha }}
+          path: dist
+          if-no-files-found: error
+          retention-days: 7
