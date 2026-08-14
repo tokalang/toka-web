@@ -1,11 +1,11 @@
 ---
 title: Toka Programming Language
-description: A no-GC systems programming language that keeps performance and static safety as baselines while making real systems semantics explicit and everyday code easier to read, write, and maintain.
+description: A no-GC systems language for explicit resource semantics, predictable performance, and static safety.
 template: splash
 hero:
-  tagline: "A no-GC systems programming language that keeps performance and static safety as baselines while making real systems semantics explicit and everyday code easier to read, write, and maintain."
+  tagline: "A no-GC systems programming language for explicit resource semantics, predictable performance, and static safety."
   banner:
-    content: "v1.0.0-rc.4 is in qualification. v0.9.9-01 remains the latest stable SDK."
+    content: "Public preview — try Toka in the browser or install a published release candidate."
   image:
     file: ../../assets/logo.svg
   actions:
@@ -13,14 +13,10 @@ hero:
       link: /playground/
       icon: rocket
       variant: primary
-    - text: Developer Guide
-      link: /introduction/
+    - text: Install a Release Candidate
+      link: /installation/
       icon: right-arrow
       variant: secondary
-    - text: Replicate a Package
-      link: https://github.com/tokalang/toka/blob/main/AGENTS-USER.md
-      icon: external
-      variant: minimal
     - text: View on GitHub
       link: https://github.com/tokalang/toka
       icon: external
@@ -28,6 +24,30 @@ hero:
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## See The Boundary In The Code
+
+Toka keeps an ownership transfer visible at the call site and in the function contract:
+
+```toka
+shape Resource(val: i32)
+
+fn keep(cede item: Resource) -> Resource {
+    return cede item
+}
+
+fn main() -> i32 {
+    auto item = Resource(val = 42)
+    auto kept = keep(cede item)
+    if kept.val != 42 {
+        return 1
+    }
+    return 0
+}
+```
+
+Toka is a public preview, not a stable 1.0 compatibility promise. Start in the
+browser, then use an exact published tag when you are ready to install an SDK.
 
 ## Design Goal
 
@@ -59,3 +79,4 @@ Toka does not pursue minimal syntax for its own sake. It pursues the minimum sur
 - Install the current release from [Installation](/installation/).
 - Try small examples in the [online playground](/playground/).
 - Follow the community-driven [Toka Book](https://lumicore-dev.github.io/toka-book/) for a longer tutorial path.
+- To replicate a package with AI assistance, read the [package guide](https://github.com/tokalang/toka/blob/main/AGENTS-USER.md).

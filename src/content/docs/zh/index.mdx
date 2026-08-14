@@ -1,11 +1,11 @@
 ---
 title: Toka 编程语言
-description: 一门以零成本性能和静态安全为底线，让真实系统语义保持显式，并让日常代码更易读、易写、易维护的无 GC 系统编程语言。
+description: 一门以显式资源语义、可预测性能和静态安全为核心的无 GC 系统编程语言。
 template: splash
 hero:
-  tagline: "一门以零成本性能和静态安全为底线，让真实系统语义保持显式，并让日常代码更易读、易写、易维护的无 GC 系统编程语言。"
+  tagline: "一门以显式资源语义、可预测性能和静态安全为核心的无 GC 系统编程语言。"
   banner:
-    content: "v1.0.0-rc.4 正在资格验证中；v0.9.9-01 仍是最新稳定 SDK。"
+    content: "Public Preview：可在线体验，或安装已发布的 release candidate。"
   image:
     file: ../../../assets/logo.svg
   actions:
@@ -13,14 +13,10 @@ hero:
       link: /playground/
       icon: rocket
       variant: primary
-    - text: 开发指南
-      link: /zh/introduction/
+    - text: 安装 Release Candidate
+      link: /zh/installation/
       icon: right-arrow
       variant: secondary
-    - text: 复刻一个包
-      link: https://github.com/tokalang/toka/blob/main/AGENTS-USER.md
-      icon: external
-      variant: minimal
     - text: GitHub 仓库
       link: https://github.com/tokalang/toka
       icon: external
@@ -28,6 +24,30 @@ hero:
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## 在代码中看见边界
+
+Toka 让所有权转移同时出现在调用点与函数契约中：
+
+```toka
+shape Resource(val: i32)
+
+fn keep(cede item: Resource) -> Resource {
+    return cede item
+}
+
+fn main() -> i32 {
+    auto item = Resource(val = 42)
+    auto kept = keep(cede item)
+    if kept.val != 42 {
+        return 1
+    }
+    return 0
+}
+```
+
+Toka 当前处于 Public Preview，并非稳定的 1.0 兼容性承诺。建议先在线体验；
+安装 SDK 时请使用一个明确、已发布的 tag。
 
 ## 设计目标
 
@@ -59,3 +79,4 @@ Toka 不以“最少语法”为目标。它追求的是：在真实系统语义
 - 查看 [安装指南](/zh/installation/) 安装当前 release。
 - 在 [在线 Playground](/playground/) 尝试小例子。
 - 通过社区维护的 [Toka Book](https://lumicore-dev.github.io/toka-book/) 系统学习。
+- 如需用 AI 协助复刻一个包，请阅读 [包复刻指南](https://github.com/tokalang/toka/blob/main/AGENTS-USER.md)。

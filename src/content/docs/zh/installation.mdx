@@ -3,23 +3,27 @@ title: 安装指南
 description: 如何安装 Toka 编译器及构建工具。
 ---
 
-Toka 为 macOS 和 Linux 发布预构建 release 包。安装脚本会下载最新稳定
-release，将编译器、项目管理器和标准库安装到 `~/.toka/`，并配置 shell 环境。
+Toka 为 macOS 和 Linux 发布预构建的 release candidate。安装脚本会将编译器、
+项目管理器和标准库安装到 `~/.toka/`，并配置 shell 环境。Toka 当前处于
+Public Preview，尚不构成稳定 1.0 兼容性承诺。
 
 ## 极速安装 (macOS & Linux)
 
-运行安装脚本：
+安装一个明确、已发布的 release candidate：
 
 ```bash
-curl -fsSL https://tokalang.dev/install.sh | bash
+curl -fsSL https://tokalang.dev/install.sh | bash -s -- v1.0.0-rc.4
+toka doctor
 ```
 
-脚本会识别系统和 CPU 架构，下载当前 release，并为常见 shell 配置 `PATH` 和 `TOKA_LIB`。
+脚本会识别系统和 CPU 架构，并为常见 shell 配置 `PATH` 和 `TOKA_LIB`。
+`toka doctor` 应在同一个 shell 中确认 SDK 工具和标准库均可用。
 
 ### Release Candidate
 
-GitHub 的 `latest` 端点有意只选择稳定 release。待 `v1.0.0-rc.4` 发布后，
-请显式传入该候选版的 tag：
+不带参数的安装脚本会遵循 GitHub 的稳定版 `latest` 选择器。在 Public Preview
+阶段，请优先显式传入已发布的 tag，使安装可复现。替换下方 tag 前，请先检查
+[GitHub Releases 页面](https://github.com/tokalang/toka/releases)：
 
 ```bash
 curl -fsSL https://tokalang.dev/install.sh | bash -s -- v1.0.0-rc.4

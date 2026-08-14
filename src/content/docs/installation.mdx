@@ -3,24 +3,30 @@ title: Installation
 description: How to install the Toka compiler and build tool.
 ---
 
-Toka publishes prebuilt release archives for macOS and Linux. The installer
-downloads the latest stable release, installs the compiler, project manager,
-and standard library under `~/.toka/`, and updates your shell environment.
+Toka publishes prebuilt release-candidate archives for macOS and Linux. The
+installer installs the compiler, project manager, and standard library under
+`~/.toka/`, then updates your shell environment. Toka is currently a public
+preview, not a stable 1.0 compatibility promise.
 
 ## Quick Install (macOS & Linux)
 
-Run the installer:
+Install a specific published release candidate:
 
 ```bash
-curl -fsSL https://tokalang.dev/install.sh | bash
+curl -fsSL https://tokalang.dev/install.sh | bash -s -- v1.0.0-rc.4
+toka doctor
 ```
 
-The script detects your OS and CPU architecture, downloads the current release, and configures `PATH` and `TOKA_LIB` for common shells.
+The script detects your OS and CPU architecture, then configures `PATH` and
+`TOKA_LIB` for common shells. `toka doctor` should confirm that the SDK tools
+and standard library are available in the same shell.
 
 ### Release Candidates
 
-GitHub's `latest` endpoint intentionally selects a stable release. After
-`v1.0.0-rc.4` is published, pass its exact tag:
+The bare installer follows GitHub's stable `latest` release selector. During
+the public-preview period, prefer an exact published tag so that an install is
+repeatable. Replace the tag below only after checking the
+[GitHub releases page](https://github.com/tokalang/toka/releases):
 
 ```bash
 curl -fsSL https://tokalang.dev/install.sh | bash -s -- v1.0.0-rc.4

@@ -11,7 +11,46 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'Toka Lang',
+			description:
+				'A no-GC systems programming language with explicit resource semantics and static safety.',
 			favicon: '/logo.svg',
+			head: [
+				{
+					tag: 'meta',
+					attrs: {
+						property: 'og:type',
+						content: 'website',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						property: 'og:image',
+						content: 'https://tokalang.dev/og.png',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						property: 'og:image:alt',
+						content: 'Toka — Explicit systems semantics',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						name: 'twitter:image',
+						content: 'https://tokalang.dev/og.png',
+					},
+				},
+				{
+					tag: 'meta',
+					attrs: {
+						name: 'twitter:image:alt',
+						content: 'Toka — Explicit systems semantics',
+					},
+				},
+			],
 			expressiveCode: {
 				shiki: {langs: [tokaLanguage]}
 			},
