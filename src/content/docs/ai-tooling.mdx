@@ -1,0 +1,70 @@
+---
+title: "AI Tooling"
+description: "Use machine-readable compiler facts in an editor or AI-assisted Toka workflow."
+---
+
+Toka exposes deterministic compiler facts for editors and AI coding tools. They
+make a proposed change easier to inspect against the language's actual
+semantics; they do not make a particular model trustworthy, replace review, or
+prove runtime behavior.
+
+## A checked editing loop
+
+Use the compiler as the source of truth around an edit:
+
+```text
+completion card → API contract → edit → check --json → focused evidence → project tests
+```
+
+The [AI Completion Card](https://github.com/tokalang/toka/blob/main/docs/ai_completion_card.md)
+is concise, release-matched language context. It complements compiler output;
+it is not a substitute for it.
+
+## Start with structured diagnostics
+
+```sh
+toka check --json src/main.tk
+toka explain E0438 --json
+```
+
+`check --json` produces one versioned diagnostics document with stable codes,
+source ranges, related locations, and any machine-applicable fixes. A nonzero
+exit status still means the program was not accepted.
+
+## Inspect the semantic contract before changing it
+
+```sh
+toka index --json src/main.tk
+toka context src/main.tk \
+  --query-file src/main.tk --line 12 --character 8
+```
+
+The semantic index exposes callable and field contracts, including transfer
+mode, permission requirements, nullability, async effects, and return-borrow
+dependencies. Context resolves a symbol and returns a bounded, deterministic
+view of the surrounding program facts.
+
+## Ask why a semantic boundary was accepted or rejected
+
+```sh
+toka evidence --json src/main.tk
+toka cede-obligations --json src/main.tk
+toka capabilities --json src/main.tk
+```
+
+These commands provide focused evidence for compiler decisions, ownership
+transfer obligations, and call capability checks. Use them to narrow a repair,
+then run the project's own focused and runtime tests.
+
+## Compare a candidate without writing it
+
+```sh
+toka preview --base /work/base/main.tk --candidate /work/candidate/main.tk
+```
+
+This reports a read-only semantic diff between two roots. For package work,
+the [package replication guide](https://github.com/tokalang/toka/blob/main/AGENTS-USER.md)
+sets out the exact archive, lock, and qualification evidence required.
+
+For the complete protocol contracts and their compatibility rules, see the
+[machine-facing compiler interfaces](https://github.com/tokalang/toka/blob/main/docs/ai_tooling.md).

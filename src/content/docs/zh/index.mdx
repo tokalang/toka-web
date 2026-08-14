@@ -5,18 +5,14 @@ template: splash
 hero:
   tagline: "一门以显式资源语义、可预测性能和静态安全为核心的无 GC 系统编程语言。"
   banner:
-    content: "Public Preview：可在线体验，或安装已发布的 release candidate。"
+    content: "Public Preview：安装已发布的 release candidate，并用编译器验证修改。"
   image:
     file: ../../../assets/logo.svg
   actions:
-    - text: 在线运行 Toka
-      link: /playground/
-      icon: rocket
-      variant: primary
     - text: 安装 Release Candidate
       link: /zh/installation/
       icon: right-arrow
-      variant: secondary
+      variant: primary
     - text: GitHub 仓库
       link: https://github.com/tokalang/toka
       icon: external
@@ -46,12 +42,11 @@ fn main() -> i32 {
 }
 ```
 
-Toka 当前处于 Public Preview，并非稳定的 1.0 兼容性承诺。建议先在线体验；
-安装 SDK 时请使用一个明确、已发布的 tag。
+Toka 当前处于 Public Preview，并非稳定的 1.0 兼容性承诺。安装 SDK 时请使用一个明确、已发布的 tag。
 
 ## 设计目标
 
-Toka 从两个底线出发：可预测的零成本性能，以及强静态安全。在这两个前提下，Toka 追问的是：系统代码能否在不隐藏真实系统语义的前提下，更直接、更紧凑、更可维护。
+Toka 从两个底线出发：可预测的零成本性能，以及强静态安全。编译器还会输出机器可读的语义事实，让编辑器和 AI 工具能检查开发者正在审阅的同一组边界。在这些前提下，Toka 追问的是：系统代码能否在不隐藏真实系统语义的前提下，更直接、更紧凑、更可维护。
 
 Toka 不以“最少语法”为目标。它追求的是：在真实系统语义不被隐藏的前提下，触摸到所需的最小表层。所有权转移、可变性、重绑定、可空性、错误传播、异步挂起、FFI 边界，以及表示层访问，都应该在真正发生作用的位置可见。
 
@@ -71,13 +66,16 @@ Toka 不以“最少语法”为目标。它追求的是：在真实系统语义
 	<Card title="内建项目工具链" icon="setting">
 		`toka` 命令围绕 `package.tk` 和 `build.tk` 管理项目创建、单文件运行、包解析、构建编排、测试、格式化和文档生成。
 	</Card>
+	<Card title="面向 AI 的编译器事实" icon="document">
+		结构化诊断、语义上下文、API 契约，以及聚焦的所有权或能力证据，使编辑器或 AI 工具可以根据编译器事实验证修改。它们不取代项目测试，也不宣称模型会自行写出正确代码。
+	</Card>
 </CardGrid>
 
 ## 从哪里开始
 
 - 阅读 [Toka 是什么？](/zh/introduction/) 了解核心语言模型。
 - 查看 [安装指南](/zh/installation/) 安装当前 release。
-- 在 [在线 Playground](/playground/) 尝试小例子。
+- 阅读 [AI 工具链](/zh/ai-tooling/) 了解如何在编辑器或 AI 工作流中使用编译器验证过的事实。
 - 通过社区维护的 [Toka Book](https://lumicore-dev.github.io/toka-book/) 系统学习。
 - 如有问题、想法或项目可在 [GitHub Discussions](https://github.com/tokalang/toka/discussions) 交流。
 - 如需用 AI 协助复刻一个包，请阅读 [包复刻指南](https://github.com/tokalang/toka/blob/main/AGENTS-USER.md)。

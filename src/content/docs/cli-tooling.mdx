@@ -96,24 +96,26 @@ service exists.
 Searches the configured Toka package registry.
 
 ```bash
-toka search ink
+toka search unicode
 
 # Output:
-# Search Results:
-# ---------------
-# toka-ink (0.2.1)
-#     Terminal UI component library for Toka language
+# Searching for 'unicode' in registry...
+# unicode    0.1.1    Deterministic Unicode extended-grapheme segmentation for Toka
 ```
 
 ### `toka publish`
-Creates the current package's release archive. It does not upload to the public
-registry by itself. Publish the archive in a tagged GitHub Release, then submit
-the reviewed catalog entry that records its URL and SHA-256. See the
+Builds the current package's release archive. It can upload only to a configured
+local registry; it does not publish to the public catalog by itself. Publish the
+archive in a tagged GitHub Release, then submit the reviewed catalog entry that
+records its URL and SHA-256. See the
 [package replication guide](https://github.com/tokalang/toka/blob/main/AGENTS-USER.md)
 for the complete workflow.
 
 ### `toka add <url_or_name>`
 Adds a package dependency to the current project and updates `package.tk`.
+
+For structured diagnostics, semantic context, contracts, and ownership evidence
+for editors or AI tools, see [AI Tooling](/ai-tooling/).
 
 ---
 

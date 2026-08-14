@@ -75,10 +75,10 @@ export default defineConfig({
 					label: 'Introduction',
 					translations: { 'zh-CN': '简介' },
 					items: [
-						{ label: 'Try Toka Online', translations: { 'zh-CN': '在线运行 (Playground)' }, link: '/playground/' },
 						{ label: 'What is Toka?', translations: { 'zh-CN': 'Toka 是什么？' }, slug: 'introduction' },
 						{ label: 'Installation', translations: { 'zh-CN': '安装' }, slug: 'installation' },
 						{ label: 'CLI & Tooling', translations: { 'zh-CN': '命令行工具与构建' }, slug: 'cli-tooling' },
+						{ label: 'AI Tooling', translations: { 'zh-CN': 'AI 工具链' }, slug: 'ai-tooling' },
 						{ label: 'Project Structure', translations: { 'zh-CN': '项目结构与最佳实践' }, slug: 'project-structure' },
 					],
 				},

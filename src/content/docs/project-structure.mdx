@@ -7,15 +7,18 @@ As your Toka applications and libraries grow, maintaining a clean and intuitive 
 
 ## 1. Executable Applications (Binaries)
 
-If you are building an application that will be compiled into an executable, the entry point should always be `src/main.tk`.
+For an executable created by `toka new`, the entry source is `src/main.tk` and
+`build.tk` describes how to build it. Toka does not enforce one universal
+directory layout, but keeping executable entry code there is the usual convention.
 
 ### Standard Layout
 
 ```text
 my-app/
-├── package.tk        # Build system configuration
+├── package.tk        # Package metadata and dependencies
+├── build.tk          # Build orchestration for this project
 ├── src/
-│   ├── main.tk       # The main entry point containing pub fn main() -> i32
+│   ├── main.tk       # The executable entry point, usually fn main() -> i32
 │   ├── utils.tk      # Application-specific logic
 │   └── models/
 │       ├── user.tk
@@ -25,7 +28,7 @@ my-app/
 ```
 
 ### Best Practices for Executables
-- **Entry Point**: Always place your `pub fn main()` inside `src/main.tk`.
+- **Entry Point**: Keep the executable's `fn main()` in `src/main.tk` when using the standard layout.
 - **Modularity**: Break down large features into subdirectories inside `src/` (e.g., `src/models/`, `src/services/`).
 
 ---
@@ -55,6 +58,7 @@ Instead, flatten your library components and group them under a unified namespac
 ```text
 my-lib/
 ├── package.tk
+├── build.tk
 ├── lib/
 │   └── mylib/           # The unified namespace directory
 │       ├── button.tk    # Clean, intuitive filenames
@@ -64,7 +68,7 @@ my-lib/
 ```
 
 ### Best Practices for Libraries
-- **No `main.tk`**: Never use `main.tk` inside library directories. `main.tk` is strictly reserved for executable entry points.
+- **Library modules**: By convention, reserve `main.tk` for executable entries and name library modules after the API they provide.
 - **Unified Namespace**: Always place your library files inside a subdirectory under `lib/` (e.g., `lib/mylib/`). Do not pollute the root `lib/` directory with loose files.
 - **Clean Imports**: With the standard layout, your users will enjoy clean, idiomatic imports:
   ```toka

@@ -94,22 +94,20 @@ CLI 提供包搜索、依赖记录和 archive 创建能力，但不会假装存�
 搜索配置好的 Toka 包注册表。
 
 ```bash
-toka search ink
+toka search unicode
 
 # 输出示例:
-# Search Results:
-# ---------------
-# toka-ink (0.2.1)
-#     Terminal UI component library for Toka language
+# Searching for 'unicode' in registry...
+# unicode    0.1.1    Deterministic Unicode extended-grapheme segmentation for Toka
 ```
 
 ### `toka publish`
-创建当前包的 release archive；它本身不会上传到公开注册表。应将 archive
-发布到带 tag 的 GitHub Release，再提交记录 URL 与 SHA-256 的审核 catalog 条目。
-完整流程参见[包复刻指南](https://github.com/tokalang/toka/blob/main/AGENTS-USER.md)。
+构建当前包的 release archive。它只能上传到已配置的本地 registry，不会自行发布到公开 catalog。应将 archive 发布到带 tag 的 GitHub Release，再提交记录 URL 与 SHA-256 的审核 catalog 条目。完整流程参见[包复刻指南](https://github.com/tokalang/toka/blob/main/AGENTS-USER.md)。
 
 ### `toka add <url_or_name>`
 向当前项目添加包依赖，并更新 `package.tk`。
+
+如需在编辑器或 AI 工具中使用结构化诊断、语义上下文、契约和所有权证据，请阅读 [AI 工具链](/zh/ai-tooling/)。
 
 ---
 

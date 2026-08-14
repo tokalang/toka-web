@@ -5,18 +5,14 @@ template: splash
 hero:
   tagline: "A no-GC systems programming language for explicit resource semantics, predictable performance, and static safety."
   banner:
-    content: "Public preview — try Toka in the browser or install a published release candidate."
+    content: "Public preview — install a published release candidate and verify changes with the compiler."
   image:
     file: ../../assets/logo.svg
   actions:
-    - text: Try Toka Online
-      link: /playground/
-      icon: rocket
-      variant: primary
     - text: Install a Release Candidate
       link: /installation/
       icon: right-arrow
-      variant: secondary
+      variant: primary
     - text: View on GitHub
       link: https://github.com/tokalang/toka
       icon: external
@@ -46,12 +42,12 @@ fn main() -> i32 {
 }
 ```
 
-Toka is a public preview, not a stable 1.0 compatibility promise. Start in the
-browser, then use an exact published tag when you are ready to install an SDK.
+Toka is a public preview, not a stable 1.0 compatibility promise. Use an exact
+published tag when you are ready to install an SDK.
 
 ## Design Goal
 
-Toka starts from two baselines: predictable zero-cost performance and strong static safety. With those in place, the language asks how direct, compact, and maintainable systems code can become without hiding the semantics that make systems programming hard.
+Toka starts from two baselines: predictable zero-cost performance and strong static safety. The compiler also exposes machine-readable semantic facts so editors and AI tools can inspect the same boundaries that developers review. With those foundations in place, the language asks how direct, compact, and maintainable systems code can become without hiding the semantics that make systems programming hard.
 
 Toka does not pursue minimal syntax for its own sake. It pursues the minimum surface needed to expose real systems semantics: ownership transfer, mutation, rebinding, nullability, error propagation, async suspension, FFI boundaries, and representation-level access.
 
@@ -71,13 +67,16 @@ Toka does not pursue minimal syntax for its own sake. It pursues the minimum sur
 	<Card title="Integrated Project Tooling" icon="setting">
 		The `toka` command manages project creation, single-file runs, package resolution, build orchestration, tests, formatting, and documentation around `package.tk` and `build.tk`.
 	</Card>
+	<Card title="AI-Ready Compiler Facts" icon="document">
+		Structured diagnostics, semantic context, API contracts, and focused ownership or capability evidence let an editor or AI tool verify an edit against compiler facts. They do not replace project tests or claim that a model writes correct code on its own.
+	</Card>
 </CardGrid>
 
 ## Where To Start
 
 - Read [What is Toka?](/introduction/) for the core language model.
 - Install the current release from [Installation](/installation/).
-- Try small examples in the [online playground](/playground/).
+- Read [AI Tooling](/ai-tooling/) to use compiler-verified facts in an editor or AI workflow.
 - Follow the community-driven [Toka Book](https://lumicore-dev.github.io/toka-book/) for a longer tutorial path.
 - Ask a question, share a project, or discuss an idea in
   [GitHub Discussions](https://github.com/tokalang/toka/discussions).

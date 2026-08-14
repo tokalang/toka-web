@@ -1,0 +1,56 @@
+---
+title: "AI 工具链"
+description: "在编辑器或 AI 辅助的 Toka 工作流中使用机器可读的编译器事实。"
+---
+
+Toka 会向编辑器和 AI 编程工具输出确定性的编译器事实。它们让修改可以依据语言的真实语义接受检查；不保证某个模型可靠，不取代人工审阅，也不证明运行时行为。
+
+## 经过检查的编辑流程
+
+围绕一次修改，让编译器保持为唯一事实来源：
+
+```text
+completion card → API 契约 → 编辑 → check --json → 聚焦证据 → 项目测试
+```
+
+[AI Completion Card](https://github.com/tokalang/toka/blob/main/docs/ai_completion_card.md)
+提供精简且与 release 对应的语言上下文。它是编译器输出的补充，而不是替代品。
+
+## 从结构化诊断开始
+
+```sh
+toka check --json src/main.tk
+toka explain E0438 --json
+```
+
+`check --json` 输出一个带版本的诊断文档，包含稳定的诊断代码、源码范围、关联位置和可由机器应用的修复。非零退出码仍表示程序未被接受。
+
+## 修改前先查看语义契约
+
+```sh
+toka index --json src/main.tk
+toka context src/main.tk \
+  --query-file src/main.tk --line 12 --character 8
+```
+
+语义索引会给出 callable 与 field 的契约，包括转移方式、权限要求、可空性、异步效果和返回借用依赖。上下文查询会解析符号，并返回有界且确定的周边程序事实。
+
+## 询问某个语义边界为何成立或被拒绝
+
+```sh
+toka evidence --json src/main.tk
+toka cede-obligations --json src/main.tk
+toka capabilities --json src/main.tk
+```
+
+这些命令分别提供编译器决策、所有权转移义务和调用能力检查的聚焦证据。用它们缩小修复范围，然后运行项目定义的聚焦测试与运行时测试。
+
+## 不写入工作区地比较候选修改
+
+```sh
+toka preview --base /work/base/main.tk --candidate /work/candidate/main.tk
+```
+
+该命令会输出两个根文件之间只读的语义差异。对于包工作流，请遵循[包复刻指南](https://github.com/tokalang/toka/blob/main/AGENTS-USER.md)中关于 archive、lock 与资格证据的完整要求。
+
+完整的协议契约与兼容性规则见[机器可读的编译器接口](https://github.com/tokalang/toka/blob/main/docs/ai_tooling.md)。
