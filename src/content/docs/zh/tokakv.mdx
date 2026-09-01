@@ -1,0 +1,168 @@
+---
+title: TokaKV：写入、重启、恢复
+description: 使用 Toka RC10 在十分钟内构建可持久恢复的嵌入式键值存储，并理解 ownership、ValueLease 与 MVCC snapshot 如何保护资源边界。
+head:
+  - tag: meta
+    attrs:
+      property: og:image
+      content: https://tokalang.dev/media/tokakv-quickstart.png
+  - tag: meta
+    attrs:
+      property: og:image:alt
+      content: TokaKV 终端展示 snapshot、leased value 与 WAL 恢复结果
+  - tag: meta
+    attrs:
+      name: twitter:title
+      content: TokaKV：写入、重启、恢复
+  - tag: meta
+    attrs:
+      name: twitter:description
+      content: 使用 Toka RC10 在十分钟内构建可持久恢复的嵌入式键值存储。
+  - tag: meta
+    attrs:
+      name: twitter:image
+      content: https://tokalang.dev/media/tokakv-quickstart.png
+  - tag: meta
+    attrs:
+      name: twitter:image:alt
+      content: TokaKV 终端展示 snapshot、leased value 与 WAL 恢复结果
+---
+
+**TokaKV 是使用纯 Toka 实现的持久化嵌入式键值引擎。** 本教程从已发布的
+RC10 SDK 开始，解析公开包、写入和读取数据、重启进程、验证 WAL 恢复，并展示
+Toka ownership 模型的实际价值。
+
+<video class="tokakv-demo" autoPlay muted loop playsInline controls preload="metadata" aria-label="TokaKV RC10 终端快速体验">
+  <source src="/media/tokakv-quickstart.webm" type="video/webm" />
+  <a href="/media/tokakv-quickstart.gif">查看 TokaKV 快速体验 GIF。</a>
+</video>
+
+## 1. 安装 Toka RC10
+
+Linux 和 macOS 的 x86_64、aarch64 SDK 已经发布：
+
+```bash
+curl -fsSL https://tokalang.dev/install.sh | bash -s -- v1.0.0-rc.10
+toka doctor
+```
+
+## 2. 创建项目并添加 TokaKV
+
+```bash
+toka new tokakv-tour
+cd tokakv-tour
+toka add tokakv
+```
+
+## 3. 替换 `src/main.tk`
+
+```toka
+import std/io::{println}
+import official/tokakv::{TokaKvEngine}
+
+const DB_PATH = "tokakv-tour-data"
+const ACCOUNT_KEY = "account:42"
+
+fn main() -> i32 {
+    auto db# = TokaKvEngine::open(string::from(DB_PATH)).unwrap()
+    auto existing = db#.get(string::from(ACCOUNT_KEY)).unwrap()
+
+    if existing.is_none() {
+        println("[TokaKV] FIRST RUN")
+        db#.put(string::from(ACCOUNT_KEY), string::from("100")).unwrap()
+        println("write: {} = 100", ACCOUNT_KEY)
+
+        {
+            auto snapshot = db#.acquire_snapshot().unwrap()
+            db#.put(string::from(ACCOUNT_KEY), string::from("125")).unwrap()
+
+            auto old_value = db#
+                .get_at_snapshot(string::from(ACCOUNT_KEY), snapshot)
+                .unwrap()
+                .unwrap()
+            auto latest_value = db#.get(string::from(ACCOUNT_KEY)).unwrap().unwrap()
+            println("snapshot: {} = {}", ACCOUNT_KEY, old_value)
+            println("latest:   {} = {}", ACCOUNT_KEY, latest_value)
+            assert(old_value.as_str().equals("100"), "snapshot must retain the old value")
+            assert(latest_value.as_str().equals("125"), "latest read must see the update")
+        }
+
+        auto leased = db#
+            .get_lease(string::from(ACCOUNT_KEY))
+            .unwrap()
+            .into_value()
+            .unwrap()
+        assert(leased.as_str().equals("125"), "leased read must see the latest value")
+        db#.close().unwrap()
+        println("lease after close: {}", leased.as_str())
+        println("NEXT: run `toka run` again to verify WAL recovery")
+        return 0
+    }
+
+    auto recovered = existing.unwrap()
+    println("[TokaKV] SECOND RUN")
+    println("recovered: {} = {}", ACCOUNT_KEY, recovered)
+    println("sequence: {}", db#.current_seq())
+    assert(recovered.as_str().equals("125"), "reopened database must recover the latest value")
+    assert(db#.current_seq() == 2:u64, "WAL replay must recover both committed writes")
+    db#.close().unwrap()
+    println("RECOVERY VERIFIED")
+    return 0
+}
+```
+
+仓库里的[已校验源码](https://github.com/tokalang/tokakv/blob/main/examples/ten-minute-tour/src/main.tk)
+为这里展示的每个值和 sequence 都增加了断言。
+
+## 4. 连续运行两次
+
+```bash
+toka run
+toka run
+```
+
+第一个进程写入两个版本，并比较时间点 snapshot 与最新值：
+
+```text
+[TokaKV] FIRST RUN
+snapshot: account:42 = 100
+latest:   account:42 = 125
+lease after close: 125
+NEXT: run `toka run` again to verify WAL recovery
+```
+
+第二个进程重新打开目录，从 WAL 恢复两次写入：
+
+```text
+[TokaKV] SECOND RUN
+recovered: account:42 = 125
+sequence: 2
+RECOVERY VERIFIED
+```
+
+RC10 可能向 stderr 输出来自 SDK 构建模块的已知 `W0408` warning。这不影响成功
+构建，也不影响上面的 TokaKV 结果标记。
+
+## 资源模型为什么重要
+
+| 概念 | 价值 |
+| :--- | :--- |
+| Ownership | 引擎、存储、cache 和后台资源具有确定的 owner 与清理时机，不依赖垃圾回收器。 |
+| `ValueLease` | 解码后的字符串或字节 view 与保持底层存储存活的 owner 绑定；编译器拒绝逃出 lease 生命周期的 view。 |
+| `SnapshotLease` | 不可伪造的 RAII 资源固定权威 sequence，离开作用域时自动释放对应的 compaction 保留义务。 |
+
+教程把这些契约直接展示出来：最新值已经变为 `125` 时，snapshot 仍读取 `100`；
+引擎关闭后，leased view 仍然有效。
+
+完整的编译器拒绝示例以及 `get` / `get_lease` API 对照见
+[ownership、lease 与 snapshot 指南](https://github.com/tokalang/tokakv/blob/main/docs/ownership-lease-snapshot.md)。
+
+## Public Preview 边界
+
+TokaKV 当前支持 Linux 和 macOS 上的单进程嵌入式使用，compaction 范围为
+L0-to-L1。分布式复制、共识协议、Redis 协议服务端、更深层级和异步磁盘卸载
+不在当前边界内。
+
+- [TokaKV 源码与 qualification suite](https://github.com/tokalang/tokakv)
+- [Toka RC10 release](https://github.com/tokalang/toka/releases/tag/v1.0.0-rc.10)
+- [安装 Toka](/zh/installation/)

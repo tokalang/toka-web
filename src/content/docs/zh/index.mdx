@@ -69,38 +69,15 @@ Toka `v1.0.0-rc.10` 是已经发布的 Public Preview release candidate。在稳
 ## 用 TokaKV 运行真实程序
 
 [TokaKV](https://github.com/tokalang/tokakv) 是使用纯 Toka 实现的官方嵌入式
-键值存储引擎。从干净的 RC10 SDK 开始：
+键值存储引擎。它的十分钟教程使用公开 RC10 SDK 写入数据、保留时间点 snapshot、
+持有 owner-pinned value lease、重启进程并验证 WAL 恢复。
 
-```bash
-toka new tokakv_hello
-cd tokakv_hello
-toka add tokakv
-```
+<video class="tokakv-demo" autoPlay muted loop playsInline controls preload="metadata" aria-label="TokaKV RC10 终端快速体验">
+  <source src="/media/tokakv-quickstart.webm" type="video/webm" />
+  <a href="/media/tokakv-quickstart.gif">查看 TokaKV 快速体验 GIF。</a>
+</video>
 
-用下面的内容替换 `src/main.tk`：
-
-```toka
-import std/io::{println}
-import official/tokakv::{TokaKvEngine}
-
-fn main() -> i32 {
-    auto db = TokaKvEngine::open(string::from("hello.tokakv")).unwrap()
-    db.put(string::from("language"), string::from("Toka")).unwrap()
-
-    auto value = db.get(string::from("language")).unwrap().unwrap()
-    println("{}", value)
-
-    db.close().unwrap()
-    return 0
-}
-```
-
-运行 `toka run`，最终输出为 `Toka`。这条完整流程已经使用已发布的 RC10 SDK
-和公开 `tokakv` 包完成验证。为保持紧凑，示例使用了 `unwrap()`；生产代码应显式
-处理存储和 I/O 错误。
-
-TokaKV 当前是单进程嵌入式 preview 引擎，compaction 范围为 L0-to-L1；更深层级、
-分布式复制和 Redis 协议服务端不在当前边界内。
+[进入完整的 TokaKV 十分钟教程 →](/zh/tokakv/)
 
 ## 设计目标
 

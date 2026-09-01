@@ -31,3 +31,13 @@
 .starlight-logo {
 	/* filter: drop-shadow(0 0 10px rgba(82, 71, 255, 0.3)); */
 }
+
+.tokakv-demo {
+    display: block;
+    width: 100%;
+    margin: 1.5rem 0;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 0.75rem;
+    background: #171717;
+    box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.18);
+}
