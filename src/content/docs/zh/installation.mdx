@@ -13,11 +13,23 @@ Public Preview，尚不构成稳定 1.0 兼容性承诺。
 
 ```bash
 curl -fsSL https://tokalang.dev/install.sh | bash -s -- v1.0.0-rc.10
+export PATH="$HOME/.toka/bin:$PATH"
+export TOKA_LIB="$HOME/.toka/lib"
 toka doctor
 ```
 
-脚本会识别系统和 CPU 架构，并为常见 shell 配置 `PATH` 和 `TOKA_LIB`。
-`toka doctor` 应在同一个 shell 中确认 SDK 工具和标准库均可用。
+脚本会识别系统和 CPU 架构，并配置之后打开的常见 shell。紧随安装命令的两行
+`export` 会让当前 shell 立即使用 SDK。
+
+预构建 SDK 使用 Python 3.10+ 编排项目，并需要原生 C linker。Ubuntu / Debian
+可在安装 SDK 前一次装齐运行依赖：
+
+```bash
+sudo apt-get update
+sudo apt-get install clang lld python3 pkg-config libssl-dev
+```
+
+`toka doctor` 会先检查这些运行条件，再报告 SDK ready。
 
 ### Release Candidate
 
@@ -27,6 +39,8 @@ toka doctor
 
 ```bash
 curl -fsSL https://tokalang.dev/install.sh | bash -s -- v1.0.0-rc.10
+export PATH="$HOME/.toka/bin:$PATH"
+export TOKA_LIB="$HOME/.toka/lib"
 ```
 
 ## Windows 安装

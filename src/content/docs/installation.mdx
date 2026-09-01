@@ -14,12 +14,24 @@ Install a specific published release candidate:
 
 ```bash
 curl -fsSL https://tokalang.dev/install.sh | bash -s -- v1.0.0-rc.10
+export PATH="$HOME/.toka/bin:$PATH"
+export TOKA_LIB="$HOME/.toka/lib"
 toka doctor
 ```
 
-The script detects your OS and CPU architecture, then configures `PATH` and
-`TOKA_LIB` for common shells. `toka doctor` should confirm that the SDK tools
-and standard library are available in the same shell.
+The script detects your OS and CPU architecture and configures future common
+shell sessions. The two `export` commands activate the SDK in the shell that
+ran the installer.
+
+The prebuilt SDK uses Python 3.10+ for project orchestration and a native C
+linker. On Ubuntu/Debian, install all runtime prerequisites before the SDK:
+
+```bash
+sudo apt-get update
+sudo apt-get install clang lld python3 pkg-config libssl-dev
+```
+
+`toka doctor` checks these runtime requirements before declaring the SDK ready.
 
 ### Release Candidates
 
@@ -30,6 +42,8 @@ repeatable. Replace the tag below only after checking the
 
 ```bash
 curl -fsSL https://tokalang.dev/install.sh | bash -s -- v1.0.0-rc.10
+export PATH="$HOME/.toka/bin:$PATH"
+export TOKA_LIB="$HOME/.toka/lib"
 ```
 
 ## Windows Installation
