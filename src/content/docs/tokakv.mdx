@@ -1,0 +1,174 @@
+---
+title: "TokaKV: write, restart, recover"
+description: Build a durable embedded key-value store in ten minutes with Toka RC10, then see how ownership, value leases, and MVCC snapshots keep resource boundaries safe.
+head:
+  - tag: meta
+    attrs:
+      property: og:image
+      content: https://tokalang.dev/media/tokakv-quickstart.png
+  - tag: meta
+    attrs:
+      property: og:image:alt
+      content: TokaKV terminal showing snapshot, leased value, and WAL recovery results
+  - tag: meta
+    attrs:
+      name: twitter:title
+      content: "TokaKV: write, restart, recover"
+  - tag: meta
+    attrs:
+      name: twitter:description
+      content: Build a durable embedded key-value store in ten minutes with Toka RC10.
+  - tag: meta
+    attrs:
+      name: twitter:image
+      content: https://tokalang.dev/media/tokakv-quickstart.png
+  - tag: meta
+    attrs:
+      name: twitter:image:alt
+      content: TokaKV terminal showing snapshot, leased value, and WAL recovery results
+---
+
+**TokaKV is a durable embedded key-value engine written in pure Toka.** This
+tour starts from the published RC10 SDK, resolves the public package, writes and
+reads data, restarts the process, verifies WAL recovery, and demonstrates why
+Toka's ownership model matters.
+
+<video class="tokakv-demo" autoPlay muted loop playsInline controls preload="metadata" aria-label="TokaKV RC10 terminal quickstart">
+  <source src="/media/tokakv-quickstart.webm" type="video/webm" />
+  <a href="/media/tokakv-quickstart.gif">View the animated TokaKV quickstart.</a>
+</video>
+
+## 1. Install Toka RC10
+
+Published SDKs support Linux and macOS on x86_64 and aarch64:
+
+```bash
+curl -fsSL https://tokalang.dev/install.sh | bash -s -- v1.0.0-rc.10
+toka doctor
+```
+
+## 2. Create a project and add TokaKV
+
+```bash
+toka new tokakv-tour
+cd tokakv-tour
+toka add tokakv
+```
+
+## 3. Replace `src/main.tk`
+
+```toka
+import std/io::{println}
+import official/tokakv::{TokaKvEngine}
+
+const DB_PATH = "tokakv-tour-data"
+const ACCOUNT_KEY = "account:42"
+
+fn main() -> i32 {
+    auto db# = TokaKvEngine::open(string::from(DB_PATH)).unwrap()
+    auto existing = db#.get(string::from(ACCOUNT_KEY)).unwrap()
+
+    if existing.is_none() {
+        println("[TokaKV] FIRST RUN")
+        db#.put(string::from(ACCOUNT_KEY), string::from("100")).unwrap()
+        println("write: {} = 100", ACCOUNT_KEY)
+
+        {
+            auto snapshot = db#.acquire_snapshot().unwrap()
+            db#.put(string::from(ACCOUNT_KEY), string::from("125")).unwrap()
+
+            auto old_value = db#
+                .get_at_snapshot(string::from(ACCOUNT_KEY), snapshot)
+                .unwrap()
+                .unwrap()
+            auto latest_value = db#.get(string::from(ACCOUNT_KEY)).unwrap().unwrap()
+            println("snapshot: {} = {}", ACCOUNT_KEY, old_value)
+            println("latest:   {} = {}", ACCOUNT_KEY, latest_value)
+            assert(old_value.as_str().equals("100"), "snapshot must retain the old value")
+            assert(latest_value.as_str().equals("125"), "latest read must see the update")
+        }
+
+        auto leased = db#
+            .get_lease(string::from(ACCOUNT_KEY))
+            .unwrap()
+            .into_value()
+            .unwrap()
+        assert(leased.as_str().equals("125"), "leased read must see the latest value")
+        db#.close().unwrap()
+        println("lease after close: {}", leased.as_str())
+        println("NEXT: run `toka run` again to verify WAL recovery")
+        return 0
+    }
+
+    auto recovered = existing.unwrap()
+    println("[TokaKV] SECOND RUN")
+    println("recovered: {} = {}", ACCOUNT_KEY, recovered)
+    println("sequence: {}", db#.current_seq())
+    assert(recovered.as_str().equals("125"), "reopened database must recover the latest value")
+    assert(db#.current_seq() == 2:u64, "WAL replay must recover both committed writes")
+    db#.close().unwrap()
+    println("RECOVERY VERIFIED")
+    return 0
+}
+```
+
+The repository's
+[checked source](https://github.com/tokalang/tokakv/blob/main/examples/ten-minute-tour/src/main.tk)
+adds assertions for every value and sequence shown here.
+
+## 4. Run it twice
+
+```bash
+toka run
+toka run
+```
+
+The first process writes two versions and compares its point-in-time snapshot
+with the latest value:
+
+```text
+[TokaKV] FIRST RUN
+snapshot: account:42 = 100
+latest:   account:42 = 125
+lease after close: 125
+NEXT: run `toka run` again to verify WAL recovery
+```
+
+The second process reopens the directory and recovers both writes from the WAL:
+
+```text
+[TokaKV] SECOND RUN
+recovered: account:42 = 125
+sequence: 2
+RECOVERY VERIFIED
+```
+
+RC10 can emit known `W0408` warnings from SDK build modules to stderr. They do
+not invalidate a successful build or the TokaKV result markers above.
+
+## Why the resource model matters
+
+| Concept | Value |
+| :--- | :--- |
+| Ownership | Engine, storage, cache, and background resources have deterministic owners and cleanup instead of a garbage collector. |
+| `ValueLease` | A decoded string or byte view stays attached to the owner that keeps its storage alive; the compiler rejects a view that escapes its lease. |
+| `SnapshotLease` | A non-forgeable RAII resource pins an authoritative sequence, then automatically releases that compaction obligation when it leaves scope. |
+
+The tour makes those contracts visible: the snapshot still reads `100` after
+the latest value becomes `125`, and the leased view remains valid after the
+engine closes.
+
+Read the complete
+[ownership, lease, and snapshot guide](https://github.com/tokalang/tokakv/blob/main/docs/ownership-lease-snapshot.md)
+for compiler-rejected examples and the `get` / `get_lease` API matrix.
+
+## Public Preview boundary
+
+TokaKV currently supports single-process embedded use on Linux and macOS. Its
+compaction scope is L0-to-L1. Distributed replication, consensus, Redis
+protocol serving, deeper levels, and asynchronous disk offload are outside the
+current boundary.
+
+- [TokaKV source and qualification suite](https://github.com/tokalang/tokakv)
+- [Toka RC10 release](https://github.com/tokalang/toka/releases/tag/v1.0.0-rc.10)
+- [Install Toka](/installation/)

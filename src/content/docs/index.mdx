@@ -73,39 +73,16 @@ warning noise from SDK build modules.
 ## Build Something Real With TokaKV
 
 [TokaKV](https://github.com/tokalang/tokakv) is an official embedded key-value
-engine written in pure Toka. Start from a clean RC10 SDK:
+engine written in pure Toka. Its ten-minute tour writes data, keeps a point-in-time
+snapshot, holds an owner-pinned value lease, restarts the process, and verifies
+WAL recovery using the published RC10 SDK.
 
-```bash
-toka new tokakv_hello
-cd tokakv_hello
-toka add tokakv
-```
+<video class="tokakv-demo" autoPlay muted loop playsInline controls preload="metadata" aria-label="TokaKV RC10 terminal quickstart">
+  <source src="/media/tokakv-quickstart.webm" type="video/webm" />
+  <a href="/media/tokakv-quickstart.gif">View the animated TokaKV quickstart.</a>
+</video>
 
-Replace `src/main.tk` with:
-
-```toka
-import std/io::{println}
-import official/tokakv::{TokaKvEngine}
-
-fn main() -> i32 {
-    auto db = TokaKvEngine::open(string::from("hello.tokakv")).unwrap()
-    db.put(string::from("language"), string::from("Toka")).unwrap()
-
-    auto value = db.get(string::from("language")).unwrap().unwrap()
-    println("{}", value)
-
-    db.close().unwrap()
-    return 0
-}
-```
-
-Run `toka run`; the final output is `Toka`. This exact flow has been verified
-with the published RC10 SDK and public `tokakv` package. The compact example
-uses `unwrap()`; production code should handle storage and I/O errors.
-
-TokaKV is currently a single-process embedded preview engine with L0-to-L1
-compaction. Deeper levels, distributed replication, and a Redis protocol server
-are outside its current boundary.
+[Take the complete TokaKV ten-minute tour →](/tokakv/)
 
 ## Design Goal
 
