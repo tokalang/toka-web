@@ -10,9 +10,9 @@ export default defineConfig({
 	site: 'https://tokalang.dev',
 	integrations: [
 		starlight({
-			title: 'Toka Lang',
+			title: 'Toka systems programming language',
 			description:
-				'A no-GC systems programming language with explicit resource semantics and static safety.',
+				'A no-GC systems programming language for explicit resource semantics, predictable performance, and static safety. Designed for AI-assisted development with machine-readable, compiler-verifiable semantic evidence.',
 			favicon: '/logo.svg',
 			head: [
 				{
@@ -33,7 +33,7 @@ export default defineConfig({
 					tag: 'meta',
 					attrs: {
 						property: 'og:image:alt',
-						content: 'Toka — Explicit systems semantics',
+						content: 'Toka systems programming language — explicit systems semantics',
 					},
 				},
 				{
@@ -47,7 +47,7 @@ export default defineConfig({
 					tag: 'meta',
 					attrs: {
 						name: 'twitter:image:alt',
-						content: 'Toka — Explicit systems semantics',
+						content: 'Toka systems programming language — explicit systems semantics',
 					},
 				},
 			],

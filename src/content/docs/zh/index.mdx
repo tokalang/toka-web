@@ -1,11 +1,11 @@
 ---
-title: Toka 编程语言
-description: 一门以显式资源语义、可预测性能和静态安全为核心的无 GC 系统编程语言。
+title: Toka 系统编程语言
+description: 一门强调显式资源语义、可预测性能与静态安全的无 GC 系统编程语言。通过机器可读、可由编译器验证的语义证据，为 AI 辅助开发而设计。
 template: splash
 hero:
-  tagline: "一门以显式资源语义、可预测性能和静态安全为核心的无 GC 系统编程语言。"
+  tagline: "一门强调显式资源语义、可预测性能与静态安全的无 GC 系统编程语言。通过机器可读、可由编译器验证的语义证据，为 AI 辅助开发而设计。"
   banner:
-    content: "Public Preview：安装已发布的 release candidate，并用编译器验证修改。"
+    content: "RC10 Public Preview：1.0 语义已冻结，SDK 已发布，生态包已经过资格验证。"
   image:
     file: ../../../assets/logo.svg
   actions:
@@ -43,6 +43,64 @@ fn main() -> i32 {
 ```
 
 Toka 当前处于 Public Preview，并非稳定的 1.0 兼容性承诺。安装 SDK 时请使用一个明确、已发布的 tag。
+
+本项目统一使用名称 **Toka systems programming language**，官方仓库为
+[`tokalang/toka`](https://github.com/tokalang/toka)。它与历史上的 Toka Forth、
+Tokelang，以及其他同名或近似命名的 Toka / Toke 项目无关。
+
+## RC10 状态概览
+
+Toka `v1.0.0-rc.10` 是已经发布的 Public Preview release candidate。在稳定化
+阶段，1.0 语言语义已经冻结；当前工作集中于文档、生态采用、资格验证和缺陷修复，
+不再增加语言新特性。
+
+| 平台 | RC10 状态 |
+| :--- | :--- |
+| Linux x86_64 | 已发布 Tier 1 SDK archive |
+| Linux aarch64 | 已发布 Tier 1 SDK archive |
+| macOS x86_64 | 已发布 Tier 1 SDK archive |
+| macOS aarch64 / Apple Silicon | 已发布 Tier 1 SDK archive |
+| Windows / MSYS2 | 源码构建与 dogfood 路径；没有 RC10 SDK archive |
+| WSL2 / WASI | 可用或实验性路径；不是 1.0 阻塞目标 |
+
+已知边界：RC10 仍是 prerelease；语言尚未自举；生态仍然年轻；成功执行
+`toka run` 时也可能出现来自 SDK 构建模块的 `W0408` warning noise。
+
+## 用 TokaKV 运行真实程序
+
+[TokaKV](https://github.com/tokalang/tokakv) 是使用纯 Toka 实现的官方嵌入式
+键值存储引擎。从干净的 RC10 SDK 开始：
+
+```bash
+toka new tokakv_hello
+cd tokakv_hello
+toka add tokakv
+```
+
+用下面的内容替换 `src/main.tk`：
+
+```toka
+import std/io::{println}
+import official/tokakv::{TokaKvEngine}
+
+fn main() -> i32 {
+    auto db = TokaKvEngine::open(string::from("hello.tokakv")).unwrap()
+    db.put(string::from("language"), string::from("Toka")).unwrap()
+
+    auto value = db.get(string::from("language")).unwrap().unwrap()
+    println("{}", value)
+
+    db.close().unwrap()
+    return 0
+}
+```
+
+运行 `toka run`，最终输出为 `Toka`。这条完整流程已经使用已发布的 RC10 SDK
+和公开 `tokakv` 包完成验证。为保持紧凑，示例使用了 `unwrap()`；生产代码应显式
+处理存储和 I/O 错误。
+
+TokaKV 当前是单进程嵌入式 preview 引擎，compaction 范围为 L0-to-L1；更深层级、
+分布式复制和 Redis 协议服务端不在当前边界内。
 
 ## 设计目标
 
