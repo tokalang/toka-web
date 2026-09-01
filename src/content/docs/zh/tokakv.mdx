@@ -43,8 +43,14 @@ Linux 和 macOS 的 x86_64、aarch64 SDK 已经发布：
 
 ```bash
 curl -fsSL https://tokalang.dev/install.sh | bash -s -- v1.0.0-rc.10
+export PATH="$HOME/.toka/bin:$PATH"
+export TOKA_LIB="$HOME/.toka/lib"
 toka doctor
 ```
+
+SDK 需要 Python 3.10+ 和原生 C linker。Ubuntu / Debian 请先运行
+`sudo apt-get install clang lld python3 pkg-config libssl-dev`。如果
+`toka doctor` 报告失败，请解决后再继续。
 
 ## 2. 创建项目并添加 TokaKV
 
