@@ -5,7 +5,7 @@ template: splash
 hero:
   tagline: "A no-GC systems programming language for explicit resource semantics, predictable performance, and static safety. Designed for AI-assisted development with machine-readable, compiler-verifiable semantic evidence."
   banner:
-    content: "RC12 Public Preview — product-quality DX repairs on frozen 1.0 semantics."
+    content: "RC12 Public Preview — published for evaluation; the Week 3 relocation gate is not accepted."
   image:
     file: ../../assets/logo.svg
   actions:
@@ -69,6 +69,12 @@ new language features.
 Known boundaries: RC12 remains a prerelease; the language is not self-hosted;
 and the ecosystem is young. RC12 changes DX, CLI diagnostics, and documentation;
 it does not change language semantics or ownership rules.
+
+> [!WARNING]
+> Post-publication black-box replay found that a fresh shell can lose the SDK
+> library root after the complete RC12 tree is moved and `TOKA_LIB` is unset.
+> Keep the default installation location or export the relocated `TOKA_LIB`.
+> The corrected PATH-lifetime fix is on `main`; RC12 itself is immutable.
 
 ## Build Something Real With TokaKV
 

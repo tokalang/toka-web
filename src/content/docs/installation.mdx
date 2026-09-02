@@ -33,6 +33,12 @@ sudo apt-get install clang lld python3 pkg-config libssl-dev
 
 `toka doctor` checks these runtime requirements before declaring the SDK ready.
 
+> [!WARNING]
+> RC12 is published for evaluation but did not pass the post-publication Week 3
+> relocation gate. If you move the complete SDK away from `~/.toka`, explicitly
+> set `TOKA_LIB` to the moved `lib` directory. The default installation path is
+> unaffected.
+
 ### Release Candidates
 
 The bare installer follows GitHub's stable `latest` release selector. During
