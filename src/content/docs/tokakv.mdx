@@ -1,6 +1,6 @@
 ---
 title: "TokaKV: write, restart, recover"
-description: Build a durable embedded key-value store in ten minutes with Toka RC11, then see how ownership, value leases, and MVCC snapshots keep resource boundaries safe.
+description: Build a durable embedded key-value store in ten minutes with Toka RC12, then see how ownership, value leases, and MVCC snapshots keep resource boundaries safe.
 head:
   - tag: meta
     attrs:
@@ -17,7 +17,7 @@ head:
   - tag: meta
     attrs:
       name: twitter:description
-      content: Build a durable embedded key-value store in ten minutes with Toka RC11.
+      content: Build a durable embedded key-value store in ten minutes with Toka RC12.
   - tag: meta
     attrs:
       name: twitter:image
@@ -29,7 +29,7 @@ head:
 ---
 
 **TokaKV is a durable embedded key-value engine written in pure Toka.** This
-tour starts from the published RC11 SDK, resolves the public package, writes and
+tour starts from the published RC12 SDK, resolves the public package, writes and
 reads data, restarts the process, verifies WAL recovery, and demonstrates why
 Toka's ownership model matters.
 
@@ -38,12 +38,12 @@ Toka's ownership model matters.
   <a href="/media/tokakv-quickstart.gif">View the animated TokaKV quickstart.</a>
 </video>
 
-## 1. Install Toka RC11
+## 1. Install Toka RC12
 
 Published SDKs support Linux and macOS on x86_64 and aarch64:
 
 ```bash
-curl -fsSL https://tokalang.dev/install.sh | bash -s -- v1.0.0-rc.11
+curl -fsSL https://tokalang.dev/install.sh | bash -s -- v1.0.0-rc.12
 export PATH="$HOME/.toka/bin:$PATH"
 export TOKA_LIB="$HOME/.toka/lib"
 toka doctor
@@ -149,7 +149,7 @@ sequence: 2
 RECOVERY VERIFIED
 ```
 
-RC11 removes the repeated SDK-owned `W0408` warning noise. User-source
+RC12 removes the repeated SDK-owned `W0408` warning noise. User-source
 diagnostics remain visible and actionable.
 
 ## Why the resource model matters
@@ -176,5 +176,5 @@ protocol serving, deeper levels, and asynchronous disk offload are outside the
 current boundary.
 
 - [TokaKV source and qualification suite](https://github.com/tokalang/tokakv)
-- [Toka RC11 release](https://github.com/tokalang/toka/releases/tag/v1.0.0-rc.11)
+- [Toka RC12 release](https://github.com/tokalang/toka/releases/tag/v1.0.0-rc.12)
 - [Install Toka](/installation/)
