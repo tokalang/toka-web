@@ -5,7 +5,7 @@ template: splash
 hero:
   tagline: "A no-GC systems programming language for explicit resource semantics, predictable performance, and static safety. Designed for AI-assisted development with machine-readable, compiler-verifiable semantic evidence."
   banner:
-    content: "RC10 Public Preview — frozen 1.0 semantics, published SDKs, and a qualified package ecosystem."
+    content: "RC11 Public Preview — product-quality DX repairs on frozen 1.0 semantics."
   image:
     file: ../../assets/logo.svg
   actions:
@@ -50,34 +50,34 @@ at [`tokalang/toka`](https://github.com/tokalang/toka). It is unrelated to the
 historical Toka Forth projects, Tokelang, and other similarly named Toka or
 Toke projects.
 
-## RC10 At A Glance
+## RC11 At A Glance
 
-Toka `v1.0.0-rc.10` is a published Public Preview release candidate. The 1.0
+Toka `v1.0.0-rc.11` is a published Public Preview release candidate. The 1.0
 language semantics are frozen during stabilization: current work focuses on
 documentation, ecosystem adoption, qualification, and bug fixing rather than
 new language features.
 
-| Platform | RC10 status |
+| Platform | RC11 status |
 | :--- | :--- |
 | Linux x86_64 | Published Tier 1 SDK archive |
 | Linux aarch64 | Published Tier 1 SDK archive |
 | macOS x86_64 | Published Tier 1 SDK archive |
 | macOS aarch64 / Apple Silicon | Published Tier 1 SDK archive |
-| Windows / MSYS2 | Source-build and dogfood path; no RC10 SDK archive |
+| Windows / MSYS2 | Source-build and dogfood path; no RC11 SDK archive |
 | WSL2 / WASI | Available or experimental; not a 1.0 blocking target |
 
-Known boundaries: RC10 remains a prerelease; the language is not self-hosted;
-the ecosystem is young; and a successful `toka run` may still include `W0408`
-warning noise from SDK build modules.
+Known boundaries: RC11 remains a prerelease; the language is not self-hosted;
+and the ecosystem is young. RC11 changes DX, CLI diagnostics, and documentation;
+it does not change language semantics or ownership rules.
 
 ## Build Something Real With TokaKV
 
 [TokaKV](https://github.com/tokalang/tokakv) is an official embedded key-value
 engine written in pure Toka. Its ten-minute tour writes data, keeps a point-in-time
 snapshot, holds an owner-pinned value lease, restarts the process, and verifies
-WAL recovery using the published RC10 SDK.
+WAL recovery using the published RC11 SDK.
 
-<video class="tokakv-demo" autoPlay muted loop playsInline controls preload="metadata" aria-label="TokaKV RC10 terminal quickstart">
+<video class="tokakv-demo" autoPlay muted loop playsInline controls preload="metadata" aria-label="TokaKV terminal quickstart">
   <source src="/media/tokakv-quickstart.webm" type="video/webm" />
   <a href="/media/tokakv-quickstart.gif">View the animated TokaKV quickstart.</a>
 </video>

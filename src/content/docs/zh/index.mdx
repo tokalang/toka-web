@@ -5,7 +5,7 @@ template: splash
 hero:
   tagline: "一门强调显式资源语义、可预测性能与静态安全的无 GC 系统编程语言。通过机器可读、可由编译器验证的语义证据，为 AI 辅助开发而设计。"
   banner:
-    content: "RC10 Public Preview：1.0 语义已冻结，SDK 已发布，生态包已经过资格验证。"
+    content: "RC11 Public Preview：在冻结的 1.0 语义上完成产品质量 DX 修复。"
   image:
     file: ../../../assets/logo.svg
   actions:
@@ -48,31 +48,31 @@ Toka 当前处于 Public Preview，并非稳定的 1.0 兼容性承诺。安装 
 [`tokalang/toka`](https://github.com/tokalang/toka)。它与历史上的 Toka Forth、
 Tokelang，以及其他同名或近似命名的 Toka / Toke 项目无关。
 
-## RC10 状态概览
+## RC11 状态概览
 
-Toka `v1.0.0-rc.10` 是已经发布的 Public Preview release candidate。在稳定化
+Toka `v1.0.0-rc.11` 是已经发布的 Public Preview release candidate。在稳定化
 阶段，1.0 语言语义已经冻结；当前工作集中于文档、生态采用、资格验证和缺陷修复，
 不再增加语言新特性。
 
-| 平台 | RC10 状态 |
+| 平台 | RC11 状态 |
 | :--- | :--- |
 | Linux x86_64 | 已发布 Tier 1 SDK archive |
 | Linux aarch64 | 已发布 Tier 1 SDK archive |
 | macOS x86_64 | 已发布 Tier 1 SDK archive |
 | macOS aarch64 / Apple Silicon | 已发布 Tier 1 SDK archive |
-| Windows / MSYS2 | 源码构建与 dogfood 路径；没有 RC10 SDK archive |
+| Windows / MSYS2 | 源码构建与 dogfood 路径；没有 RC11 SDK archive |
 | WSL2 / WASI | 可用或实验性路径；不是 1.0 阻塞目标 |
 
-已知边界：RC10 仍是 prerelease；语言尚未自举；生态仍然年轻；成功执行
-`toka run` 时也可能出现来自 SDK 构建模块的 `W0408` warning noise。
+已知边界：RC11 仍是 prerelease；语言尚未自举；生态仍然年轻。RC11 只修改
+DX、CLI 诊断和文档，不修改语言语义或 ownership 规则。
 
 ## 用 TokaKV 运行真实程序
 
 [TokaKV](https://github.com/tokalang/tokakv) 是使用纯 Toka 实现的官方嵌入式
-键值存储引擎。它的十分钟教程使用公开 RC10 SDK 写入数据、保留时间点 snapshot、
+键值存储引擎。它的十分钟教程使用公开 RC11 SDK 写入数据、保留时间点 snapshot、
 持有 owner-pinned value lease、重启进程并验证 WAL 恢复。
 
-<video class="tokakv-demo" autoPlay muted loop playsInline controls preload="metadata" aria-label="TokaKV RC10 终端快速体验">
+<video class="tokakv-demo" autoPlay muted loop playsInline controls preload="metadata" aria-label="TokaKV 终端快速体验">
   <source src="/media/tokakv-quickstart.webm" type="video/webm" />
   <a href="/media/tokakv-quickstart.gif">查看 TokaKV 快速体验 GIF。</a>
 </video>

@@ -1,6 +1,6 @@
 ---
 title: TokaKV：写入、重启、恢复
-description: 使用 Toka RC10 在十分钟内构建可持久恢复的嵌入式键值存储，并理解 ownership、ValueLease 与 MVCC snapshot 如何保护资源边界。
+description: 使用 Toka RC11 在十分钟内构建可持久恢复的嵌入式键值存储，并理解 ownership、ValueLease 与 MVCC snapshot 如何保护资源边界。
 head:
   - tag: meta
     attrs:
@@ -17,7 +17,7 @@ head:
   - tag: meta
     attrs:
       name: twitter:description
-      content: 使用 Toka RC10 在十分钟内构建可持久恢复的嵌入式键值存储。
+      content: 使用 Toka RC11 在十分钟内构建可持久恢复的嵌入式键值存储。
   - tag: meta
     attrs:
       name: twitter:image
@@ -29,20 +29,20 @@ head:
 ---
 
 **TokaKV 是使用纯 Toka 实现的持久化嵌入式键值引擎。** 本教程从已发布的
-RC10 SDK 开始，解析公开包、写入和读取数据、重启进程、验证 WAL 恢复，并展示
+RC11 SDK 开始，解析公开包、写入和读取数据、重启进程、验证 WAL 恢复，并展示
 Toka ownership 模型的实际价值。
 
-<video class="tokakv-demo" autoPlay muted loop playsInline controls preload="metadata" aria-label="TokaKV RC10 终端快速体验">
+<video class="tokakv-demo" autoPlay muted loop playsInline controls preload="metadata" aria-label="TokaKV 终端快速体验">
   <source src="/media/tokakv-quickstart.webm" type="video/webm" />
   <a href="/media/tokakv-quickstart.gif">查看 TokaKV 快速体验 GIF。</a>
 </video>
 
-## 1. 安装 Toka RC10
+## 1. 安装 Toka RC11
 
 Linux 和 macOS 的 x86_64、aarch64 SDK 已经发布：
 
 ```bash
-curl -fsSL https://tokalang.dev/install.sh | bash -s -- v1.0.0-rc.10
+curl -fsSL https://tokalang.dev/install.sh | bash -s -- v1.0.0-rc.11
 export PATH="$HOME/.toka/bin:$PATH"
 export TOKA_LIB="$HOME/.toka/lib"
 toka doctor
@@ -146,8 +146,7 @@ sequence: 2
 RECOVERY VERIFIED
 ```
 
-RC10 可能向 stderr 输出来自 SDK 构建模块的已知 `W0408` warning。这不影响成功
-构建，也不影响上面的 TokaKV 结果标记。
+RC11 已消除 SDK 自身重复的 `W0408` warning noise；用户源码诊断仍然可见、可操作。
 
 ## 资源模型为什么重要
 
@@ -170,5 +169,5 @@ L0-to-L1。分布式复制、共识协议、Redis 协议服务端、更深层级
 不在当前边界内。
 
 - [TokaKV 源码与 qualification suite](https://github.com/tokalang/tokakv)
-- [Toka RC10 release](https://github.com/tokalang/toka/releases/tag/v1.0.0-rc.10)
+- [Toka RC11 release](https://github.com/tokalang/toka/releases/tag/v1.0.0-rc.11)
 - [安装 Toka](/zh/installation/)
