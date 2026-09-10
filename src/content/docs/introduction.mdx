@@ -3,7 +3,10 @@ title: Toka systems programming language introduction
 description: What is the Toka systems programming language?
 ---
 
-Toka is a no-GC systems programming language designed around explicit resource semantics. It keeps zero-cost performance and static safety as baselines, makes real systems semantics visible, and tries to keep everyday systems code readable, writable, and maintainable.
+Toka is a native systems programming language that aims to combine static safety, systems-level control, and clear expression, helping programmers and AI tools build, check, and maintain software more reliably.
+
+Its design foundations are no garbage collector, predictable resource costs,
+PAL static checking, and machine-readable, compiler-verifiable semantic evidence.
 
 The canonical project name is **Toka systems programming language** and its
 official source is [`tokalang/toka`](https://github.com/tokalang/toka). It is
@@ -11,7 +14,7 @@ not the historical Toka Forth or another similarly named Toka or Toke project.
 
 ## Design Position
 
-Toka does not treat performance, safety, and simplicity as three independent slogans. Performance and static safety are the floor. The design question is what kind of syntax and compiler discipline can keep that floor while reducing accidental complexity in everyday systems code.
+Toka starts from three design baselines: no garbage collector and predictable resource costs, strong static safety, and AI-verifiable semantics. The design question is what kind of syntax and compiler discipline can preserve these foundations while reducing accidental complexity in everyday systems code.
 
 That does not mean minimizing syntax at all costs. Toka aims for the minimum surface needed to expose real systems semantics: a piece of notation should earn its place by making ownership, access, representation, failure, or control-flow boundaries easier to see and audit.
 
@@ -20,11 +23,15 @@ That leads to a few recurring principles:
 - source code should show the operation that actually matters;
 - mutation, rebinding, transfer, and nullability should not be visually ambiguous;
 - resource ownership should be explicit enough for static checking;
+- editors and AI tools should be able to inspect the compiler facts behind the boundaries programmers review;
 - low-level representation should be available without making raw pointer style the default API shape.
 
 This safety posture is deliberately conservative at the edge. Toka does not trade safety away for a lighter surface; if a relationship cannot be proven locally without exposing a full lifetime calculus, the compiler should reject the pattern or require a more explicit structure.
 
 ## Core Model
+
+The payload/handle distinction is one mechanism supporting these goals, alongside
+PAL checking, deterministic cleanup, resource contracts, and integrated tooling.
 
 Toka separates two layers that many systems languages collapse into one notation:
 

@@ -12,7 +12,7 @@ export default defineConfig({
 		starlight({
 			title: 'Toka systems programming language',
 			description:
-				'A no-GC systems programming language for explicit resource semantics, predictable performance, and static safety. Designed for AI-assisted development with machine-readable, compiler-verifiable semantic evidence.',
+				'A native systems programming language aiming to combine static safety, systems-level control, and clear expression, helping programmers and AI tools build, check, and maintain software more reliably.',
 			favicon: '/logo.svg',
 			head: [
 				{

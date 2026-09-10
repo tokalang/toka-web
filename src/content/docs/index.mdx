@@ -1,9 +1,9 @@
 ---
 title: Toka
-description: A no-GC systems programming language for explicit resource semantics, predictable performance, and static safety. Designed for AI-assisted development with machine-readable, compiler-verifiable semantic evidence.
+description: A native systems programming language aiming to combine static safety, systems-level control, and clear expression, helping programmers and AI tools build, check, and maintain software more reliably.
 template: splash
 hero:
-  tagline: "A no-GC systems programming language for explicit resource semantics, predictable performance, and static safety. Designed for AI-assisted development with machine-readable, compiler-verifiable semantic evidence."
+  tagline: "A native systems programming language aiming to combine static safety, systems-level control, and clear expression, helping programmers and AI tools build, check, and maintain software more reliably."
   banner:
     content: "RC12 Public Preview — published for evaluation; the Week 3 relocation gate is not accepted."
   image:
@@ -22,6 +22,9 @@ hero:
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## See The Boundary In The Code
+
+No garbage collector, predictable resource costs, PAL static checking, and
+machine-readable, compiler-verifiable semantic evidence support this goal.
 
 Toka keeps an ownership transfer visible at the call site and in the function contract:
 
@@ -92,7 +95,7 @@ WAL recovery using the published RC12 SDK.
 
 ## Design Goal
 
-Toka starts from two baselines: predictable zero-cost performance and strong static safety. The compiler also exposes machine-readable semantic facts so editors and AI tools can inspect the same boundaries that developers review. With those foundations in place, the language asks how direct, compact, and maintainable systems code can become without hiding the semantics that make systems programming hard.
+Toka starts from three design baselines: no garbage collector and predictable resource costs, strong static safety, and AI-verifiable semantics. The compiler exposes machine-readable semantic facts so editors and AI tools can inspect the same boundaries that developers review. With those foundations in place, the language asks how direct, compact, and maintainable systems code can become without hiding the semantics that make systems programming hard.
 
 Toka does not pursue minimal syntax for its own sake. It pursues the minimum surface needed to expose real systems semantics: ownership transfer, mutation, rebinding, nullability, error propagation, async suspension, FFI boundaries, and representation-level access.
 
